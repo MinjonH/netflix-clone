@@ -17,7 +17,7 @@ interface Props {
 	documentaries: Movie[];
 }
 
-const Home = ({
+const Movies = ({
 	netflixOriginals,
 	actionMovies,
 	comedyMovies,
@@ -32,33 +32,28 @@ const Home = ({
 	return (
 		<div className='relative h-screen bg-gradient-to-b lg:h-[140vh]'>
 			<Head>
-				<title>Home | Netflix</title>
+				<title>Movies | Netflix</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 			<Header />
-			<main className='relative pl-10 lg:space-y-16 lg:pl-14'>
-				<Banner netflixOriginals={netflixOriginals} />
+			<main className='relative pl-10 lg:space-y-16 lg:pl-14 mt-20'>
 				<section className='md:space-y-16 space-y-12'>
-					<Row title='Trending Now' movies={trendingNow} />
-					<Row title='Top Rated' movies={topRated} />
 					<Row title='Action Thrillers' movies={actionMovies} />
 					<Row title='Comedies' movies={comedyMovies} />
 					<Row title='Scary Movies' movies={horrorMovies} />
 					<Row title='Romance Movies' movies={romanceMovies} />
-					<Row title='Documentaries' movies={documentaries} />{' '}
+					<Row title='Documentaries' movies={documentaries} />
 				</section>
 			</main>
 		</div>
 	);
 };
 
-export default Home;
+export default Movies;
 
 export const getServerSideProps = async () => {
 	const [
 		netflixOriginals,
-		trendingNow,
-		topRated,
 		actionMovies,
 		comedyMovies,
 		horrorMovies,
@@ -66,8 +61,6 @@ export const getServerSideProps = async () => {
 		documentaries,
 	] = await Promise.all([
 		fetch(requests.fetchNetflixOriginals).then((res) => res.json()),
-		fetch(requests.fetchTrending).then((res) => res.json()),
-		fetch(requests.fetchTopRated).then((res) => res.json()),
 		fetch(requests.fetchActionMovies).then((res) => res.json()),
 		fetch(requests.fetchComedyMovies).then((res) => res.json()),
 		fetch(requests.fetchHorrorMovies).then((res) => res.json()),
@@ -78,8 +71,6 @@ export const getServerSideProps = async () => {
 	return {
 		props: {
 			netflixOriginals: netflixOriginals.results,
-			trendingNow: trendingNow.results,
-			topRated: topRated.results,
 			actionMovies: actionMovies.results,
 			comedyMovies: comedyMovies.results,
 			horrorMovies: horrorMovies.results,

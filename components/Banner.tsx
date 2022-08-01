@@ -2,7 +2,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { Movie } from '../typings';
 import { baseUrl } from '../constants/movie';
-import { BsInfoCircleFill, BsFillPlayFill } from 'react-icons/bs';
+// import { BsInfoCircleFill, BsFillPlayFill } from 'react-icons/bs';
 
 interface Props {
 	netflixOriginals: Movie[];
@@ -37,7 +37,8 @@ const Banner = ({ netflixOriginals }: Props) => {
 			<p className='max-w-xs text-xs text-shadow-md md:max-w-lg md:text-sm lg:max-w-2xl lg:text-xl'>
 				{movie?.overview}
 			</p>
-			<div className='flex space-x-3'>
+			{/* The buttons do not currently work but will later be implemented */}
+			{/* <div className='flex space-x-3'>
 				<button className='bannerBtn bg-white text-black'>
 					<BsFillPlayFill className='h-5 w-5  text-black md:h-8 md:w-8' />
 					Play
@@ -46,7 +47,7 @@ const Banner = ({ netflixOriginals }: Props) => {
 					More Info
 					<BsInfoCircleFill className='h-4 w-4 md:h-6 md:w-6' />
 				</button>
-			</div>
+			</div> */}
 		</div>
 	);
 };
