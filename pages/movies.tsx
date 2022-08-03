@@ -36,7 +36,7 @@ const Movies = ({
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 			<Header />
-			<main className='relative pl-10 lg:space-y-16 lg:pl-14 mt-20'>
+			<main className='relative pl-5 lg:space-y-16 lg:pl-14 mt-20'>
 				<section className='md:space-y-16 space-y-12'>
 					<Row title='Action Thrillers' movies={actionMovies} />
 					<Row title='Comedies' movies={comedyMovies} />
