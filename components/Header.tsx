@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { BellIcon, SearchIcon } from '@heroicons/react/solid';
+// import { BellIcon, SearchIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
 
 const Header = () => {
 	const [scroll, setScroll] = useState(false);
-
+	//Adds background colour to navbar if you scroll down
 	useEffect(() => {
 		const handleScroll = () => {
 			if (window.scrollY > 0) {
@@ -24,6 +24,7 @@ const Header = () => {
 	return (
 		<header className={`${scroll && 'bg-[#141414]'}`}>
 			<div className='flex items-center space-x-2 md:space-x-10'>
+				{/* Netflix Logo */}
 				<Link href='/'>
 					<img
 						src='https://rb.gy/ulxxee'

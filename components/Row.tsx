@@ -12,6 +12,7 @@ const Row = ({ title, movies }: Props) => {
 	const rowRef = useRef<HTMLDivElement>(null);
 	const [isMoved, setIsMoved] = useState(false);
 
+	//Makes arrow buttons scrollable
 	const handleClick = (direction: string) => {
 		setIsMoved(true);
 
