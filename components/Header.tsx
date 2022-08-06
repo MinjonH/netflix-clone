@@ -4,13 +4,14 @@ import Link from 'next/link';
 
 const Header = () => {
 	const [scroll, setScroll] = useState(false);
-	//Adds background colour to navbar if you scroll down
+
 	useEffect(() => {
 		const handleScroll = () => {
+			//Adds background colour to navbar when scrolled down
 			if (window.scrollY > 0) {
 				setScroll(true);
 			} else {
-				setScroll(false);
+				setScroll(false); //Removes background colour if at very top of page
 			}
 		};
 
@@ -33,13 +34,19 @@ const Header = () => {
 						className='cursor-pointer object-contain'
 					/>
 				</Link>
+
 				<ul className='hidden space-x-4 md:flex'>
+					{/* Link to homepage */}
 					<Link href='/'>
 						<li className='headerLink'>Home</li>
 					</Link>
+
+					{/* Link to movies page */}
 					<Link href='/movies'>
 						<li className='headerLink'>Movies</li>
 					</Link>
+
+					{/* Link to trending movies page */}
 					<Link href='/trending'>
 						<li className='headerLink'>New & Popular</li>
 					</Link>

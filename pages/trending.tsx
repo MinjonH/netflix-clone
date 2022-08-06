@@ -3,30 +3,15 @@ import Image from 'next/image';
 import Header from '../components/Header';
 import { Movie } from '../typings';
 import requests from '../utils/requests';
-import Banner from '../components/Banner';
 import Row from '../components/Row';
 
 interface Props {
 	netflixOriginals: Movie[];
 	trendingNow: Movie[];
 	topRated: Movie[];
-	actionMovies: Movie[];
-	comedyMovies: Movie[];
-	horrorMovies: Movie[];
-	romanceMovies: Movie[];
-	documentaries: Movie[];
 }
 
-const Trending = ({
-	netflixOriginals,
-	actionMovies,
-	comedyMovies,
-	documentaries,
-	horrorMovies,
-	romanceMovies,
-	topRated,
-	trendingNow,
-}: Props) => {
+const Trending = ({ netflixOriginals, topRated, trendingNow }: Props) => {
 	console.log(netflixOriginals);
 
 	return (
@@ -37,6 +22,7 @@ const Trending = ({
 			</Head>
 			<Header />
 			<main className='relative pl-5 lg:space-y-16 lg:pl-14 mt-20'>
+				{/* Creates a row for each genre of movies */}
 				<section className='space-y-12'>
 					<Row title='Trending Now' movies={trendingNow} />
 					<Row title='Top Rated' movies={topRated} />

@@ -37,6 +37,8 @@ const Movies = ({
 			</Head>
 			<Header />
 			<main className='relative pl-5 lg:space-y-16 lg:pl-14 mt-20'>
+				
+                {/* Creates a row for each genre of movies */}
 				<section className='md:space-y-16 space-y-12'>
 					<Row title='Action Thrillers' movies={actionMovies} />
 					<Row title='Comedies' movies={comedyMovies} />
