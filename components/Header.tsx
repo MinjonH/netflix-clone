@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-// import { BellIcon, SearchIcon } from '@heroicons/react/solid';
+import { BellIcon, SearchIcon } from '@heroicons/react/solid';
 import Link from 'next/link';
 
 const Header = () => {
@@ -53,10 +53,10 @@ const Header = () => {
 				</ul>
 			</div>
 
-			{/* <div className='flex items-center space-x-4 text-sm font-light cursor-pointer'>
-				<BellIcon className='hidden h-6 w-6 sm:inline cursor-pointer' />
+			<div className='flex items-center space-x-4 text-sm font-light cursor-pointer'>
 				<SearchIcon className='h-6 w-6' />
-			</div> */}
+				<BellIcon className='hidden h-6 w-6 sm:inline cursor-pointer' />
+			</div>
 		</header>
 	);
 };
