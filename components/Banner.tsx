@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { Movie } from '../typings';
 import { baseUrl } from '../constants/movie';
 import { BsInfoCircleFill, BsFillPlayFill } from 'react-icons/bs';
+import { useRecoilState } from 'recoil';
+import { modalState, movieState } from '../atoms/modalAtom';
 
 interface Props {
 	netflixOriginals: Movie[];
@@ -10,6 +12,8 @@ interface Props {
 
 const Banner = ({ netflixOriginals }: Props) => {
 	const [movie, setMovie] = useState<Movie | null>(null);
+	const [showModal, setShowModal] = useRecoilState(modalState);
+	const [currentMovie, setCurrentMovie] = useRecoilState(movieState);
 
 	useEffect(() => {
 		//Sets a random movie from the API as the backdrop image - changes with each reload
@@ -46,7 +50,13 @@ const Banner = ({ netflixOriginals }: Props) => {
 					<BsFillPlayFill className='h-5 w-5  text-black md:h-8 md:w-8' />
 					Play
 				</button>
-				<button className='bannerBtn bg-gray-500/50'>
+				<button
+					className='bannerBtn bg-gray-500/50'
+					onClick={() => {
+						setCurrentMovie(movie);
+						setShowModal(true);
+					}}
+				>
 					More Info
 					<BsInfoCircleFill className='h-4 w-4 md:h-6 md:w-6' />
 				</button>
