@@ -1,16 +1,18 @@
 import Head from 'next/head';
-import Header from '../components/Header';
+import { getProducts, Product } from '@stripe/firestore-stripe-payments';
 import { Movie } from '../typings';
+import { useRecoilValue } from 'recoil';
+import { modalState, movieState } from '../atoms/modalAtom';
+import Header from '../components/Header';
 import requests from '../utils/requests';
 import Banner from '../components/Banner';
 import Row from '../components/Row';
 import useAuth from '../hooks/useAuth';
-import { useRecoilValue } from 'recoil';
 import Modal from '../components/Modal';
-import { modalState } from '../atoms/modalAtom';
 import Plans from '../components/Plans';
-import { getProducts, Product } from '@stripe/firestore-stripe-payments';
 import payments from '../lib/stripe';
+import useSubscription from '../hooks/useSubscription';
+import useList from '../hooks/useList';
 
 interface Props {
 	netflixOriginals: Movie[];
@@ -35,34 +37,46 @@ const Home = ({
 	trendingNow,
 	products,
 }: Props) => {
-	const { logout, loading } = useAuth();
+	const { user, loading } = useAuth();
 	const showModal = useRecoilValue(modalState);
-	const subscription = false;
+	const subscription = useSubscription(user);
+	const movie = useRecoilValue(movieState);
+	const list = useList(user?.uid);
 
 	if (loading || subscription === null) return null;
 
-	if (!subscription) return <Plans />;
+	if (!subscription) return <Plans products={products} />;
 
 	if (loading) return null;
 
 	return (
-		<div className='relative h-screen bg-gradient-to-b lg:h-[140vh]'>
+		<div
+			className={`relative h-screen bg-gradient-to-b from-gray-900/10 to-[#010511] lg:h-[140vh] ${
+				showModal && '!h-screen overflow-hidden'
+			}`}
+		>
 			<Head>
 				<title>Home | Netflix</title>
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
+
 			<Header />
+
 			<main className='relative pl-5 lg:space-y-16 lg:pl-14'>
 				<Banner netflixOriginals={netflixOriginals} />
 
 				{/* Creates a row for each genre of movies */}
-				<section className='md:space-y-16 space-y-12'>
+				<section className='md:space-y-6 space-y-6'>
 					<Row title='Trending Now' movies={trendingNow} />
 					<Row title='Top Rated' movies={topRated} />
+
+					{/* My List component */}
+					{list.length > 0 && <Row title='My List' movies={list} />}
+
 					<Row title='Action Thrillers' movies={actionMovies} />
 					<Row title='Comedies' movies={comedyMovies} />
-					<Row title='Scary Movies' movies={horrorMovies} />
-					<Row title='Romance Movies' movies={romanceMovies} />
+					<Row title='Horror' movies={horrorMovies} />
+					<Row title='Romance' movies={romanceMovies} />
 					<Row title='Documentaries' movies={documentaries} />
 				</section>
 			</main>

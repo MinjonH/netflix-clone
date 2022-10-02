@@ -1,3 +1,4 @@
+import { DocumentData } from 'firebase/firestore';
 import Image from 'next/image';
 import React from 'react';
 import { useRecoilState } from 'recoil';
@@ -5,7 +6,8 @@ import { modalState, movieState } from '../atoms/modalAtom';
 import { Movie } from '../typings';
 
 interface Props {
-	movie: Movie;
+	//When using firebase
+	movie: Movie | DocumentData;
 }
 
 //Individual movie posters
@@ -15,7 +17,7 @@ const Thumbnail = ({ movie }: Props) => {
 
 	return (
 		<div
-			className='relative h-[270px] min-w-[180px] cursor-pointer transition duration-200 ease-out md:min-w-[260px] md:h-[390px] lg:hover:scale-95 md:hover:scale-95 hover:scale-95'
+			className='relative h-[270px] min-w-[180px] cursor-pointer transition duration-200 ease-out md:min-w-[260px] md:h-[390px]'
 			onClick={() => {
 				setCurrentMovie(movie);
 				setShowModal(true);

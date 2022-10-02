@@ -1,24 +1,49 @@
 import { useEffect, useState } from 'react';
 import MuiModal from '@mui/material/Modal';
+import { Grid } from '@mui/material';
 import ReactPlayer from 'react-player/lazy';
 import { useRecoilState } from 'recoil';
 import { modalState, movieState } from '../atoms/modalAtom';
 import { Movie, Element, Genre } from '../typings';
 import {
+	CheckIcon,
 	PlusIcon,
 	VolumeOffIcon,
 	VolumeUpIcon,
 	XIcon,
 } from '@heroicons/react/solid';
 import { BsHandThumbsUp, BsFillPlayFill } from 'react-icons/bs';
-import { HiDownload } from 'react-icons/hi';
+import toast, { Toaster } from 'react-hot-toast';
+import {
+	collection,
+	deleteDoc,
+	doc,
+	DocumentData,
+	onSnapshot,
+	setDoc,
+} from 'firebase/firestore';
+import useAuth from '../hooks/useAuth';
+import { db } from '../firebase';
 
 function Modal() {
+	const { user } = useAuth();
 	const [showModal, setShowModal] = useRecoilState(modalState);
 	const [movie, setMovie] = useRecoilState(movieState);
 	const [trailer, setTrailer] = useState('');
 	const [genres, setGenres] = useState<Genre[]>();
 	const [muted, setMuted] = useState(true);
+	const [addedToList, setAddedToList] = useState(false);
+	const [movies, setMovies] = useState<DocumentData[] | Movie[]>([]);
+
+	const toastStyle = {
+		background: 'white',
+		color: 'black',
+		fontWeight: 'bold',
+		fontSize: '16px',
+		padding: '15px',
+		borderRadius: '9999px',
+		maxWidth: '1000px',
+	};
 
 	useEffect(() => {
 		if (!movie) return;
@@ -48,7 +73,47 @@ function Modal() {
 		fetchMovie();
 	}, [movie]);
 
-	console.log(trailer);
+	// Find all the movies in the user's list
+	useEffect(() => {
+		if (user) {
+			return onSnapshot(
+				collection(db, 'customers', user.uid, 'myList'),
+				(snapshot) => setMovies(snapshot.docs)
+			);
+		}
+	}, [db, movie?.id]);
+
+	// Check if the movie is already in the user's list
+	useEffect(
+		() =>
+			setAddedToList(
+				movies.findIndex((result) => result.data().id === movie?.id) !== -1
+			),
+		[movies]
+	);
+
+	const handleList = async () => {
+		if (addedToList) {
+			await deleteDoc(
+				doc(db, 'customers', user!.uid, 'myList', movie?.id.toString()!)
+			);
+
+			toast(
+				`${movie?.title || movie?.original_name} was removed from My List`,
+				{ duration: 5000, style: toastStyle }
+			);
+		} else {
+			await setDoc(
+				doc(db, 'customers', user!.uid, 'myList', movie?.id.toString()!),
+				{ ...movie }
+			);
+
+			toast(
+				`${movie?.title || movie?.original_name} has been added to My List`,
+				{ duration: 5000, style: toastStyle }
+			);
+		}
+	};
 
 	const handleClose = () => {
 		setShowModal(false);
@@ -61,6 +126,7 @@ function Modal() {
 			className='!top-7 mx-auto fixed w-full max-w-5xl overflow-hidden overflow-y-scroll rounded-md scrollbar-hide'
 		>
 			<>
+				<Toaster position='bottom-center' />
 				{/* Close modal button */}
 				<button
 					onClick={handleClose}
@@ -98,13 +164,13 @@ function Modal() {
 					</div>
 				</div>
 
-				{/* Bottom part of modal */}
+				{/* Bottom part */}
 				<div className='flex space-x-16 rounded-b-md bg-gradient-to-t  from-[#181818] to-black px-10 pb-16'>
 					<div className='space-y-6 text-lg'>
 						{/* small details */}
 						<div className='flex items-center space-x-2 text-sm'>
 							<p className='font-semibold text-green-400'>
-								{movie?.vote_average * 10}% match
+								{movie?.vote_average * 10}% Match
 							</p>
 							<p className='font-light'>
 								{movie?.release_date || movie?.first_air_date}
@@ -131,8 +197,15 @@ function Modal() {
 						</div>
 						<div className='flex space-x-2'>
 							{/* my list button */}
-							<button className='flex-col justify-center items-center mr-16'>
-								<PlusIcon className='w-14 h-14' />
+							<button
+								className='flex-col justify-center items-center mr-16'
+								onClick={handleList}
+							>
+								{addedToList ? (
+									<CheckIcon className='w-14 h-14' />
+								) : (
+									<PlusIcon className='w-14 h-14' />
+								)}
 								My List
 							</button>
 
@@ -140,12 +213,6 @@ function Modal() {
 							<button className='flex-col justify-center items-center mr-16'>
 								<BsHandThumbsUp className='w-14 h-14' />
 								Rate
-							</button>
-
-							{/* download button */}
-							<button className=''>
-								<HiDownload className='w-14 h-14 mx-16' />
-								Download
 							</button>
 						</div>
 					</div>
